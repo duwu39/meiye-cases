@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>美业案例驾驶舱</title>
+<title>案例驾驶舱</title>
 <!-- PWA Meta Tags -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#8B6F47">
@@ -164,6 +164,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft
   .phone-frame { max-width: 100%; }
 }
 </style>
+<style>
+.wx-status-bar,.tab-bar,.interaction-bar{display:none!important}.custom-header{top:0;padding:14px 16px}.header-title{font-size:20px;font-weight:700}.content{padding-bottom:28px}.phone-frame{max-width:920px;min-height:100vh;background:#fafaf8}.case-feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}.case-card{margin-bottom:0;border:1px solid #eee9e2;box-shadow:0 5px 18px rgba(40,30,20,.04)}@media(max-width:700px){.case-feed{display:block}.case-card{margin-bottom:12px}}
+</style>
 </head>
 <body>
 <div class="phone-frame">
@@ -185,7 +188,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft
         <path d="m21 21-4.35-4.35"/>
       </svg>
     </div>
-    <span class="header-title">美业案例驾驶舱</span>
+    <span class="header-title">案例驾驶舱</span>
   </div>
 
   <!-- Content -->
@@ -260,7 +263,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft
           <circle cx="11" cy="11" r="8"/>
           <path d="m21 21-4.35-4.35"/>
         </svg>
-        <input type="text" class="search-input" id="searchInput" placeholder="搜索案例、城市、分类..." oninput="onSearchInput(this.value)">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索城市、项目、金额、案例关键词..." oninput="onSearchInput(this.value)">
       </div>
       <span class="search-cancel" onclick="closeOverlay('searchOverlay')">取消</span>
     </div>
@@ -477,6 +480,19 @@ function openSearch() {
   document.getElementById('searchOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('searchInput').focus(), 100);
+}
+
+function normalizeSearchText(value) {
+  let text = String(value || '').toLowerCase().replace(/[\s·_—\-，。！？：:（）()]/g, '');
+  const aliases = [
+    [/红薯|小红书/g,'小红书'],[/皮管|皮肤|痘痘|祛痘/g,'皮肤管理'],
+    [/瘦身|减肥|塑形/g,'身材管理'],[/半永久|文绣|纹秀/g,'纹绣'],
+    [/头流|投放|聚光/g,'投流'],[/克资|客户|新客|获客|引流/g,'客资'],
+    [/思域|朋友圈/g,'私域'],[/货客/g,'获客'],[/变线|挣钱|赚钱|业绩/g,'变现'],
+    [/成叫|收钱|收款|定金/g,'成交'],[/巨光/g,'聚光'],[/蓝微/g,'蓝v']
+  ];
+  aliases.forEach(([pattern,replacement]) => { text = text.replace(pattern,replacement); });
+  return text;
 }
 
 function onSearchInput(val) {
